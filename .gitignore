@@ -2,3 +2,6 @@
 /fuzz/target/
 /fuzz/corpus/
 /fuzz/artifacts/
+/wasm/target/
+/wasm/pkg/
+/site/pkg/

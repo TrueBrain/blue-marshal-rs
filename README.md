@@ -79,6 +79,19 @@ The encoder never produces them.
 The built-in string table (`MARSHAL_STRINGS` in `Marshal.cpp`) is embedded verbatim in `src/strtable.rs` so `TY_STR_TABLE` reads decode correctly.
 The writer never emits `TY_STR_TABLE` - it always writes strings as `TY_BUFFER`, which `Marshal.cpp` reads identically.
 
+## WASM demo
+
+`wasm/` is a thin `wasm-bindgen` shim exposing `decode_to_json`/`encode_from_json`, and `site/` is a small static page (upload a config file, view/edit its JSON, regenerate a config file) that loads it.
+
+Build the wasm package, then serve `site/` with any static file server (it can't be opened via `file://` because of module/CORS restrictions on `fetch`-ing the `.wasm`):
+
+```
+wasm-pack build wasm --target web --out-dir ../site/pkg
+python3 -m http.server -d site 8080
+```
+
+Then open `http://localhost:8080`.
+
 ## License
 
 MIT, see [LICENSE.md](LICENSE.md).

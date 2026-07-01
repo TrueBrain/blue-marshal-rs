@@ -17,13 +17,26 @@ jobs:
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
 
-      - name: Check tag matches Cargo.toml version
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Check tag matches Cargo.toml versions
         run: |
           tag_version="${GITHUB_REF_NAME#v}"
-          crate_version="$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[] | select(.name == "blue-marshal") | .version')"
-          if [ "$tag_version" != "$crate_version" ]; then
-            echo "Tag v$tag_version does not match Cargo.toml version $crate_version"
+          root_version="$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[] | select(.name == "blue-marshal") | .version')"
+          wasm_version="$(cargo metadata --no-deps --manifest-path wasm/Cargo.toml --format-version 1 | jq -r '.packages[] | select(.name == "blue-marshal-wasm") | .version')"
+          if [ "$tag_version" != "$root_version" ]; then
+            echo "Tag v$tag_version does not match root Cargo.toml version $root_version"
+            exit 1
+          fi
+          if [ "$tag_version" != "$wasm_version" ]; then
+            echo "Tag v$tag_version does not match wasm/Cargo.toml version $wasm_version (kept in lockstep with the root crate)"
             exit 1
           fi
 
@@ -34,3 +47,24 @@ jobs:
         run: cargo publish --locked -p blue-marshal
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Build wasm package
+        run: wasm-pack build wasm --target bundler --out-dir pkg --scope truebrain
+
+      - name: Rename npm package to @truebrain/blue-marshal
+        # The crate is named blue-marshal-wasm (it can't be named blue-marshal:
+        # that's already taken in this build graph by the root crate it
+        # depends on via `path = ".."`), but the published npm package should
+        # just be @truebrain/blue-marshal - patch wasm-pack's generated
+        # package.json rather than fight Cargo's naming constraints.
+        run: |
+          jq '.name = "@truebrain/blue-marshal"' wasm/pkg/package.json > wasm/pkg/package.json.tmp
+          mv wasm/pkg/package.json.tmp wasm/pkg/package.json
+
+      - name: Publish to npm
+        run: npm publish ./wasm/pkg --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
