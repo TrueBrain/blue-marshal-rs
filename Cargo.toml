@@ -1,0 +1,20 @@
+[package]
+name = "blue-marshal"
+version = "0.1.0"
+edition = "2021"
+description = "Rust-port of carbonengine's blue.Marshal"
+license = "MIT"
+repository = "https://github.com/TrueBrain/blue-marshal-rs"
+readme = "README.md"
+keywords = ["eve-online", "marshal", "serialization", "pickle"]
+categories = ["encoding", "parser-implementations"]
+
+[dependencies]
+num-bigint = "0.4"
+num-traits = "0.2"
+serde_json = { version = "1", features = ["preserve_order"] }
+base64 = "0.22"
+
+[[bin]]
+name = "marshal-tool"
+path = "src/bin/marshal_tool.rs"
