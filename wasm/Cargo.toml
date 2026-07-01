@@ -1,7 +1,6 @@
 [package]
 name = "blue-marshal-wasm"
-# Kept in lockstep with the root crate's version - see .github/workflows/publish.yml.
-version = "0.1.0"
+version = "0.0.0-dev"
 edition = "2021"
 description = "wasm-bindgen shim over blue-marshal, published to npm as @truebrain/blue-marshal"
 license = "MIT"
