@@ -2,7 +2,7 @@
 name = "blue-marshal-wasm"
 version = "0.0.0-dev"
 edition = "2021"
-description = "wasm-bindgen shim over blue-marshal, published to npm as @truebrain/blue-marshal"
+description = "WASM-port of carbonengine's blue.Marshal"
 license = "MIT"
 repository = "https://github.com/TrueBrain/blue-marshal-rs"
 publish = false
