@@ -4,6 +4,20 @@ A Rust port of the [blue.Marshal](https://github.com/carbonengine/blue/blob/rele
 
 It is meant to read/write EVE Online configuration files.
 
+## Installation
+
+```
+cargo add blue-marshal
+```
+
+The WASM bindings (to integrate blue-marshal in your website) are published separately on npm:
+
+```
+npm install @truebrain/blue-marshal
+```
+
+## Usage
+
 ```rust
 let bytes = std::fs::read("some.marshal")?;
 let decoded = blue_marshal::decode(&bytes)?;
