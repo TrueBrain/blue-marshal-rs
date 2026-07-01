@@ -1,5 +1,10 @@
 # Blue Marshal (in Rust)
 
+[![crates.io](https://img.shields.io/crates/v/blue-marshal.svg)](https://crates.io/crates/blue-marshal)
+[![npm](https://img.shields.io/npm/v/%40truebrain%2Fblue-marshal.svg)](https://www.npmjs.com/package/@truebrain/blue-marshal)
+[![CI](https://github.com/TrueBrain/blue-marshal-rs/actions/workflows/ci.yml/badge.svg)](https://github.com/TrueBrain/blue-marshal-rs/actions/workflows/ci.yml)
+[![docs.rs](https://img.shields.io/docsrs/blue-marshal)](https://docs.rs/blue-marshal)
+
 A Rust port of the [blue.Marshal](https://github.com/carbonengine/blue/blob/release/2.x/src/Marshal.cpp), plus a lossless JSON encoding for easy editing.
 
 It is meant to read/write EVE Online configuration files.
