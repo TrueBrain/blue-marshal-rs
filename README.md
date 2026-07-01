@@ -77,10 +77,10 @@ Keys that are themselves compound values are wrapped as `"json:<value-as-json-te
 
 This port intentionally does not implement:
 
-- `TY_DBROW` - EVE's row format, which embeds its own recursive
+- `TY_DBROW`: EVE's row format, which embeds its own recursive
   descriptor+data sub-encoding.
-- `TY_WSTREAM` - a nested pre-built `blue.MarshalStream` blob.
-- `TY_PICKLE` / `TY_PICKLER` - the generic `cPickle` fallback path.
+- `TY_WSTREAM`: a nested pre-built `blue.MarshalStream` blob.
+- `TY_PICKLE` / `TY_PICKLER`: the generic `cPickle` fallback path.
 
 Decoding a stream containing any of these tags returns `Error::Unsupported`.
 The encoder never produces them.
@@ -91,12 +91,13 @@ The encoder never produces them.
   This means a container that references itself before it has finished being built (a genuine cycle) can't be represented as an owned tree - the reference resolves to `Value::None` in that case instead of infinitely recursing.
   `Marshal.cpp` already forbids direct self-referencing tuples, and true  cycles do not show up in ordinary EVE configuration data, so this is a  theoretical, not practical, limitation.
 - Encoding never tracks shared objects: every repeated value is written out in full, every time.
-  `Marshal.cpp` reads this correctly - the `TY_REFERENCE` opcode is a size optimization, not something the format  requires - it just means a stream re-encoded through this crate can be larger than what the original C++ writer would have produced for heavily-shared data.
+  `Marshal.cpp` reads this correctly.
+  The `TY_REFERENCE` opcode is a size optimization, not something the format requires; it just means a stream re-encoded through this crate can be larger than what the original C++ writer would have produced.
 
 ## String table
 
 The built-in string table (`MARSHAL_STRINGS` in `Marshal.cpp`) is embedded verbatim in `src/strtable.rs` so `TY_STR_TABLE` reads decode correctly.
-The writer never emits `TY_STR_TABLE` - it always writes strings as `TY_BUFFER`, which `Marshal.cpp` reads identically.
+The writer never emits `TY_STR_TABLE`: it always writes strings as `TY_BUFFER`, which `Marshal.cpp` reads identically.
 
 ## WASM demo
 

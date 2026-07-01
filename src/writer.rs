@@ -29,12 +29,6 @@ impl Default for EncodeOptions {
 }
 
 /// Encode a `Value` into a `Marshal.cpp`-compatible byte stream.
-///
-/// Shared references are never emitted: every occurrence of a repeated
-/// value is written out in full (this is what the task calls "skip shared
-/// references" on the encode side). `Marshal.cpp`'s reader has no problem
-/// with this - `TY_REFERENCE` is purely an optional space optimization, not
-/// something the format requires.
 pub fn encode(value: &Value, opts: &EncodeOptions) -> Result<Vec<u8>> {
     let mut w = Writer {
         buf: Vec::new(),
@@ -214,8 +208,7 @@ impl Writer {
             Ok(())
         } else {
             // Always use TY_BUFFER: valid for any length, and skips the
-            // (optional) string-table/sharing bookkeeping entirely, which
-            // matches "skip shared references" on the encode side.
+            // (optional) string-table/sharing bookkeeping entirely.
             self.write_raw_type(TY_BUFFER)?;
             self.write_buff(b);
             Ok(())

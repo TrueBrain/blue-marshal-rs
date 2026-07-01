@@ -20,10 +20,10 @@
 //! `__reduce__` protocol/callback wrapper) plus reference resolution.
 //! It intentionally does **not** implement:
 //!
-//! - `TY_DBROW` - EVE's custom row format (has its own recursive
+//! - `TY_DBROW`: EVE's custom row format (has its own recursive
 //!   schema+data sub-encoding, out of scope for this port).
-//! - `TY_WSTREAM` - a nested pre-built `blue.MarshalStream` blob.
-//! - `TY_PICKLE` / `TY_PICKLER` - the generic `cPickle` fallback path.
+//! - `TY_WSTREAM`: a nested pre-built `blue.MarshalStream` blob.
+//! - `TY_PICKLE` / `TY_PICKLER`: the generic `cPickle` fallback path.
 //!
 //! Decoding a stream containing any of these tags returns
 //! `Error::Unsupported`. None of them are ever produced by the encoder.
@@ -42,10 +42,9 @@
 //!   practice.
 //! - **Encoding** never tracks or emits shared references: every
 //!   occurrence of a repeated value is written out in full. This is
-//!   always valid to read back - `TY_REFERENCE` is a size optimization,
-//!   not something the format requires - it just means re-encoded
-//!   streams may be larger than what `Marshal.cpp` itself would produce
-//!   for heavily-shared data.
+//!   always valid to read back. The `TY_REFERENCE` is a size optimization,
+//!   not something the format requires: it just means re-encoded
+//!   streams may be larger than what `Marshal.cpp` itself would produce.
 
 mod adler32;
 mod error;
